@@ -40,24 +40,34 @@ const server = new McpServer({
 
 // ─── Tool: get_swift_tree ────────────────────────────────────
 
-server.tool(
+server.registerTool(
   "get_swift_tree",
-  "Fetch a Figma design node and return a slim, SwiftUI-optimized component tree. " +
-  "The tree contains component hierarchy, layout properties, design tokens, SF Symbol mappings, " +
-  "and type hints — everything needed to generate idiomatic SwiftUI code. " +
-  "Raw Figma data is parsed and compressed server-side so only essential structure is returned.",
   {
-    fileKey: z.string().describe(
-      "The Figma file key. Extract from the URL: figma.com/design/<fileKey>/..."
-    ),
-    nodeId: z.string().describe(
-      "The node ID to fetch. Extract from the URL: ?node-id=<nodeId>. " +
-      "Use colon format like '2217:48104', not dash format."
-    ),
-    depth: z.number().optional().describe(
-      "Max depth to traverse the node tree. Default is 15. " +
-      "Use lower values for overview, higher for full detail."
-    ),
+    description:
+      "Fetch a Figma design node and return a slim, SwiftUI-optimized component tree. " +
+      "The tree contains component hierarchy, layout properties, design tokens, SF Symbol mappings, " +
+      "and type hints — everything needed to generate idiomatic SwiftUI code. " +
+      "Raw Figma data is parsed and compressed server-side so only essential structure is returned.",
+    inputSchema: z.object({
+      fileKey: z
+        .string()
+        .describe(
+          "The Figma file key. Extract from the URL: figma.com/design/<fileKey>/..."
+        ),
+      nodeId: z
+        .string()
+        .describe(
+          "The node ID to fetch. Extract from the URL: ?node-id=<nodeId>. " +
+            "Use colon format like '2217:48104', not dash format."
+        ),
+      depth: z
+        .number()
+        .optional()
+        .describe(
+          "Max depth to traverse the node tree. Default is 15. " +
+            "Use lower values for overview, higher for full detail."
+        ),
+    }),
   },
   async ({ fileKey, nodeId }) => {
     try {
